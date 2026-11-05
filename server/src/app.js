@@ -2,12 +2,16 @@ const mongoose = require('mongoose')
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const authRoutes = require('./auth/auth.routes')
+const tenantRoutes = require('./modules/tenant/tenant.routes')
 
 app.use(cors({
   origin: 'http://localhost:5173'
 }))
 
 app.use(express.json())
+app.use('/api/auth', authRoutes)
+app.use('/api/tenants', tenantRoutes)
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({

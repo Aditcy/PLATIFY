@@ -1,43 +1,72 @@
 
-import { useEffect, useState } from 'react'
-import api from './services/api'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import ProtectedRoute from './components/ProtectedRoute'
+import BusinessSelectionPage from './pages/BusinessSelectionPage'
 
 function App() {
-  const [status, setStatus] = useState('Connecting...')
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    api.get('/health')
-      .then((response) => {
-        setStatus(response.data.message)
-      })
-      .catch(() => {
-        setStatus('Backend connection failed')
-        setError('Please check whether the Express server is running.')
-      })
-  }, [])
+  const { isAuthenticated } = useSelector((state) => state.auth)
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
-      <div className="max-w-lg text-center">
-        <h1 className="text-5xl font-bold tracking-tight text-white">
-          PLATIFY
-        </h1>
+    <Routes>
+      {/* Default route */}
+      <Route
+        path="/"
+        element={
+          <Navigate
+            to={isAuthenticated ? '/businesses' : '/login'}
+            replace
+          />
+        }
+      />
 
-        <p className="mt-4 text-lg text-slate-400">
-          Retail Commerce & Store Management Platform
-        </p>
+      {/* Public routes */}
+      <Route
+        path="/login"
+        element={
+          isAuthenticated
+            ? <Navigate to="/businesses" replace />
+            : <LoginPage />
+        }
+      />
 
-        <div className="mt-8 rounded-xl bg-indigo-600 px-6 py-4 text-white">
-          <p className="font-semibold">Frontend Setup Complete</p>
-          <p className="mt-2 text-sm">{status}</p>
-        </div>
+      <Route
+        path="/register"
+        element={
+          isAuthenticated
+            ? <Navigate to="/businesses" replace />
+            : <RegisterPage />
+        }
+      />
 
-        {error && (
-          <p className="mt-4 text-sm text-red-400">{error}</p>
-        )}
-      </div>
-    </div>
+      {/* Protected routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route
+          path="/businesses"
+          element={<BusinessSelectionPage />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+              <h1 className="text-3xl font-bold">
+                PLATIFY Dashboard — Coming Next
+              </h1>
+            </div>
+          }
+        />
+      </Route>
+
+      {/* Fallback route */}
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
+    </Routes>
   )
 }
 
