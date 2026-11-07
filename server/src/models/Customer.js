@@ -8,14 +8,12 @@ const customerSchema = new mongoose.Schema({
     required: true,
     index: true
   },
-
   name: {
     type: String,
     required: true,
     trim: true,
     maxlength: 100
   },
-
   email: {
     type: String,
     trim: true,
@@ -23,14 +21,12 @@ const customerSchema = new mongoose.Schema({
     maxlength: 254,
     default: ''
   },
-
   phone: {
     type: String,
     trim: true,
     maxlength: 20,
     default: ''
   },
-
   address: {
     street: { type: String, default: '' },
     city: { type: String, default: '' },
@@ -38,19 +34,16 @@ const customerSchema = new mongoose.Schema({
     postalCode: { type: String, default: '' },
     country: { type: String, default: 'India' }
   },
-
   totalOrders: {
     type: Number,
     default: 0,
     min: 0
   },
-
   totalSpent: {
     type: Number,
     default: 0,
     min: 0
   },
-
   isActive: {
     type: Boolean,
     default: true

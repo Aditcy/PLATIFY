@@ -8,6 +8,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import BusinessSelectionPage from './pages/BusinessSelectionPage'
 import DashboardLayout from './layouts/DashboardLayout'
 import DashboardPage from './pages/dashboard/DashboardPage'
+import ProductsPage from './pages/dashboard/ProductsPage'
+import CategoriesPage from './pages/dashboard/CategoriesPage'
+import InventoryPage from './pages/dashboard/InventoryPage'
 
 function PlaceholderPage({ title }) {
   return (
@@ -62,9 +65,9 @@ function App() {
 
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="products" element={<PlaceholderPage title="Products" />} />
-          <Route path="categories" element={<PlaceholderPage title="Categories" />} />
-          <Route path="inventory" element={<PlaceholderPage title="Inventory" />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="categories" element={<CategoriesPage />} />
+          <Route path="inventory" element={<InventoryPage />} />
           <Route path="orders" element={<PlaceholderPage title="Orders" />} />
           <Route path="customers" element={<PlaceholderPage title="Customers" />} />
           <Route path="analytics" element={<PlaceholderPage title="Analytics" />} />
