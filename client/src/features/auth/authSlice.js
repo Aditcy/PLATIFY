@@ -1,3 +1,4 @@
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { registerUser, loginUser } from './authService'
 
@@ -34,7 +35,9 @@ const authSlice = createSlice({
     user: null,
     token: localStorage.getItem('token'),
     businesses: [],
-    activeTenant: null,
+    activeTenant: JSON.parse(
+      localStorage.getItem('activeTenant') || 'null'
+    ),
     isAuthenticated: !!localStorage.getItem('token'),
     loading: false,
     error: null
@@ -45,6 +48,7 @@ const authSlice = createSlice({
       state.user = action.payload.user
       state.token = action.payload.token
       state.isAuthenticated = true
+
       localStorage.setItem('token', action.payload.token)
     },
 
@@ -54,6 +58,11 @@ const authSlice = createSlice({
 
     setActiveTenant: (state, action) => {
       state.activeTenant = action.payload
+
+      localStorage.setItem(
+        'activeTenant',
+        JSON.stringify(action.payload)
+      )
     },
 
     logout: (state) => {
@@ -62,7 +71,9 @@ const authSlice = createSlice({
       state.businesses = []
       state.activeTenant = null
       state.isAuthenticated = false
+
       localStorage.removeItem('token')
+      localStorage.removeItem('activeTenant')
     },
 
     clearAuthError: (state) => {
@@ -76,13 +87,16 @@ const authSlice = createSlice({
         state.loading = true
         state.error = null
       })
+
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false
         state.user = action.payload.user
         state.token = action.payload.token
         state.isAuthenticated = true
+
         localStorage.setItem('token', action.payload.token)
       })
+
       .addCase(register.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
@@ -92,13 +106,16 @@ const authSlice = createSlice({
         state.loading = true
         state.error = null
       })
+
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false
         state.user = action.payload.user
         state.token = action.payload.token
         state.isAuthenticated = true
+
         localStorage.setItem('token', action.payload.token)
       })
+
       .addCase(login.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
