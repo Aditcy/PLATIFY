@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -11,6 +10,8 @@ import DashboardPage from './pages/dashboard/DashboardPage'
 import ProductsPage from './pages/dashboard/ProductsPage'
 import CategoriesPage from './pages/dashboard/CategoriesPage'
 import InventoryPage from './pages/dashboard/InventoryPage'
+import OrdersPage from './pages/dashboard/OrdersPage'
+import CustomersPage from './pages/dashboard/CustomersPage'
 
 function PlaceholderPage({ title }) {
   return (
@@ -68,8 +69,8 @@ function App() {
           <Route path="products" element={<ProductsPage />} />
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="inventory" element={<InventoryPage />} />
-          <Route path="orders" element={<PlaceholderPage title="Orders" />} />
-          <Route path="customers" element={<PlaceholderPage title="Customers" />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="customers" element={<CustomersPage />} />
           <Route path="analytics" element={<PlaceholderPage title="Analytics" />} />
           <Route path="settings" element={<PlaceholderPage title="Settings" />} />
         </Route>

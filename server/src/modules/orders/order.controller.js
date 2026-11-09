@@ -447,6 +447,7 @@ const updateOrderStatus = async (req, res) => {
       success: false,
       message: error.message || 'Unable to update order'
     })
+
   } finally {
     await session.endSession()
   }

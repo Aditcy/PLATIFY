@@ -1,6 +1,13 @@
 const mongoose = require('mongoose')
 const Customer = require('../../models/Customer')
-const Order = require('../../models/Order')
+
+const normalizeAddress = (address = {}) => ({
+  street: (address.street || '').trim(),
+  city: (address.city || '').trim(),
+  state: (address.state || '').trim(),
+  postalCode: (address.postalCode || '').trim(),
+  country: (address.country || 'India').trim()
+})
 
 const getCustomers = async (req, res) => {
   try {
@@ -66,13 +73,26 @@ const createCustomer = async (req, res) => {
       name,
       email = '',
       phone = '',
-      address = ''
+      address = {}
     } = req.body
 
-    if (!name || !name.trim()) {
+    if (typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({
         success: false,
         message: 'Customer name is required'
+      })
+    }
+
+    if (
+      typeof email !== 'string' ||
+      typeof phone !== 'string' ||
+      !address ||
+      typeof address !== 'object' ||
+      Array.isArray(address)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid customer details'
       })
     }
 
@@ -108,7 +128,7 @@ const createCustomer = async (req, res) => {
       name: name.trim(),
       email: normalizedEmail,
       phone: phone.trim(),
-      address: address.trim()
+      address: normalizeAddress(address)
     })
 
     return res.status(201).json({
@@ -135,7 +155,7 @@ const updateCustomer = async (req, res) => {
       })
     }
 
-    const allowedFields = ['name', 'email', 'phone', 'address']
+    const allowedFields = ['name', 'email', 'phone']
     const updates = {}
 
     for (const field of allowedFields) {
@@ -149,6 +169,21 @@ const updateCustomer = async (req, res) => {
 
         updates[field] = req.body[field].trim()
       }
+    }
+
+    if (req.body.address !== undefined) {
+      if (
+        !req.body.address ||
+        typeof req.body.address !== 'object' ||
+        Array.isArray(req.body.address)
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: 'Address must be an object'
+        })
+      }
+
+      updates.address = normalizeAddress(req.body.address)
     }
 
     if (Object.keys(updates).length === 0) {
@@ -245,7 +280,7 @@ const deleteCustomer = async (req, res) => {
         tenantId: req.tenant._id,
         isActive: true
       },
-      { isActive: false },
+      { $set: { isActive: false } },
       { new: true }
     )
 
