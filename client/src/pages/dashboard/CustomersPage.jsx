@@ -14,8 +14,7 @@ import {
   X,
   LoaderCircle,
   UsersRound,
-  Contact,
-  UserCheck
+  Contact
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -41,37 +40,50 @@ const EMPTY_FORM = {
 }
 
 const inputClass =
-  'w-full rounded-xl border border-white/10 bg-[#080d19] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-indigo-500'
+  'w-full min-w-0 rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]'
+
+const labelClass =
+  'mb-2 block text-sm font-medium text-[var(--text-secondary)]'
 
 const CustomerModal = ({ title, onClose, children }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-    <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-[#111a2d] shadow-2xl">
-      <div className="sticky top-0 flex items-center justify-between border-b border-white/10 bg-[#111a2d] px-6 py-5">
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
+  <div
+    className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/60 p-3 backdrop-blur-sm sm:items-center sm:p-5"
+    onClick={(event) => {
+      if (event.target === event.currentTarget) onClose()
+    }}
+  >
+    <div className="my-auto max-h-[calc(100vh-24px)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-2xl sm:max-h-[90vh]">
+      <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-4 sm:px-6 sm:py-5">
+        <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+          {title}
+        </h2>
         <button
           onClick={onClose}
-          className="rounded-lg p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+          aria-label="Close modal"
+          className="shrink-0 rounded-lg p-2 text-[var(--text-muted)] transition hover:bg-[var(--card-bg-hover)] hover:text-[var(--text-primary)]"
         >
           <X size={19} />
         </button>
       </div>
-      <div className="p-6">{children}</div>
+      <div className="p-4 sm:p-6">{children}</div>
     </div>
   </div>
 )
 
 const StatCard = ({ icon: Icon, label, value, description }) => (
-  <div className="rounded-2xl border border-white/10 bg-[#111a2d] p-5">
-    <div className="flex items-center justify-between">
+  <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+    <div className="flex items-center justify-between gap-3">
       <div>
-        <p className="text-sm text-slate-400">{label}</p>
-        <p className="mt-2 text-2xl font-bold text-white">{value}</p>
+        <p className="text-sm text-[var(--text-muted)]">{label}</p>
+        <p className="mt-2 text-2xl font-bold text-[var(--text-primary)]">
+          {value}
+        </p>
       </div>
-      <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
+      <div className="rounded-xl bg-[var(--accent-soft)] p-3 text-[var(--accent)]">
         <Icon size={22} />
       </div>
     </div>
-    <p className="mt-3 text-xs text-slate-500">{description}</p>
+    <p className="mt-3 text-xs text-[var(--text-muted)]">{description}</p>
   </div>
 )
 
@@ -283,32 +295,31 @@ const CustomersPage = () => {
   }
 
   return (
-    <div className="min-h-full space-y-7 bg-[#0d1424] p-4 text-white sm:p-6 lg:p-8">
-      {/* Page heading */}
+    <div className="min-w-0 space-y-7">
+
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <div className="mb-2 flex items-center gap-2 text-sm text-indigo-400">
+        <div className="min-w-0">
+          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-[var(--accent)]">
             <Users size={16} />
             CUSTOMER MANAGEMENT
           </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl">
             Customers
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
             Manage your business customers and their contact information.
           </p>
         </div>
 
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
+          className="flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-hover)] sm:w-auto"
         >
           <UserPlus size={18} />
           Add Customer
         </button>
       </div>
 
-      {/* Statistics */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           icon={UsersRound}
@@ -330,46 +341,47 @@ const CustomersPage = () => {
         />
       </div>
 
-      {/* Customer list */}
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111a2d]">
-        <div className="flex flex-col gap-4 border-b border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-sm">
+        <div className="flex flex-col gap-4 border-b border-[var(--border-color)] p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="font-semibold text-white">Customer Directory</h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <h2 className="font-semibold text-[var(--text-primary)]">
+              Customer Directory
+            </h2>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               {filteredCustomers.length} customer
               {filteredCustomers.length !== 1 ? 's' : ''} found
             </p>
           </div>
 
-          <div className="relative w-full sm:max-w-xs">
+          <div className="relative w-full lg:max-w-xs">
             <Search
               size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
             />
             <input
               type="text"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search customers..."
-              className="w-full rounded-xl border border-white/10 bg-[#080d19] py-3 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500"
+              className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] py-3 pl-10 pr-4 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--accent)]"
             />
           </div>
         </div>
 
         {loading ? (
-          <div className="flex min-h-64 items-center justify-center gap-3 text-slate-400">
+          <div className="flex min-h-64 items-center justify-center gap-3 text-[var(--text-muted)]">
             <LoaderCircle size={22} className="animate-spin" />
             Loading customers...
           </div>
         ) : filteredCustomers.length === 0 ? (
           <div className="flex min-h-72 flex-col items-center justify-center px-6 text-center">
-            <div className="rounded-2xl bg-indigo-500/10 p-4 text-indigo-400">
+            <div className="rounded-2xl bg-[var(--accent-soft)] p-4 text-[var(--accent)]">
               <Contact size={30} />
             </div>
-            <h3 className="mt-4 font-semibold text-white">
+            <h3 className="mt-4 font-semibold text-[var(--text-primary)]">
               {search ? 'No matching customers' : 'No customers yet'}
             </h3>
-            <p className="mt-2 max-w-sm text-sm text-slate-400">
+            <p className="mt-2 max-w-sm text-sm text-[var(--text-muted)]">
               {search
                 ? 'Try searching with another name, email, phone number or location.'
                 : 'Add your first customer to start building your customer directory.'}
@@ -377,16 +389,16 @@ const CustomersPage = () => {
             {!search && (
               <button
                 onClick={openAddModal}
-                className="mt-5 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold hover:bg-indigo-500"
+                className="mt-5 rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-hover)]"
               >
                 Add Your First Customer
               </button>
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="w-full overflow-x-auto">
             <table className="w-full min-w-[760px] text-left">
-              <thead className="bg-[#0b1220] text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-[var(--app-bg)] text-xs uppercase tracking-wider text-[var(--text-muted)]">
                 <tr>
                   <th className="px-6 py-4 font-medium">Customer</th>
                   <th className="px-6 py-4 font-medium">Contact</th>
@@ -395,24 +407,24 @@ const CustomersPage = () => {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-[var(--border-color)]">
                 {filteredCustomers.map((customer) => (
                   <tr
                     key={customer._id}
-                    className="transition hover:bg-white/[0.025]"
+                    className="transition hover:bg-[var(--card-bg-hover)]"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 font-semibold text-indigo-400">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] font-semibold text-[var(--accent)]">
                           {(customer.name || '?')
                             .charAt(0)
                             .toUpperCase()}
                         </div>
-                        <div>
-                          <p className="font-medium text-white">
+                        <div className="min-w-0">
+                          <p className="font-medium text-[var(--text-primary)]">
                             {customer.name}
                           </p>
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs text-[var(--text-muted)]">
                             Customer
                           </p>
                         </div>
@@ -421,20 +433,20 @@ const CustomersPage = () => {
 
                     <td className="px-6 py-4">
                       <div className="space-y-1.5 text-sm">
-                        <p className="flex items-center gap-2 text-slate-300">
-                          <Mail size={14} className="text-slate-500" />
-                          {customer.email || 'No email'}
+                        <p className="flex items-center gap-2 text-[var(--text-secondary)]">
+                          <Mail size={14} className="shrink-0 text-[var(--text-muted)]" />
+                          <span className="break-all">{customer.email || 'No email'}</span>
                         </p>
-                        <p className="flex items-center gap-2 text-slate-400">
-                          <Phone size={14} className="text-slate-500" />
+                        <p className="flex items-center gap-2 text-[var(--text-secondary)]">
+                          <Phone size={14} className="shrink-0 text-[var(--text-muted)]" />
                           {customer.phone || 'No phone'}
                         </p>
                       </div>
                     </td>
 
                     <td className="max-w-xs px-6 py-4">
-                      <p className="flex items-start gap-2 text-sm text-slate-400">
-                        <MapPin size={15} className="mt-0.5 shrink-0" />
+                      <p className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+                        <MapPin size={15} className="mt-0.5 shrink-0 text-[var(--text-muted)]" />
                         <span className="line-clamp-2">
                           {getAddressText(customer.address)}
                         </span>
@@ -446,21 +458,24 @@ const CustomersPage = () => {
                         <button
                           onClick={() => openDetails(customer)}
                           title="View customer"
-                          className="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-indigo-500/40 hover:bg-indigo-500/10 hover:text-indigo-400"
+                          aria-label={`View ${customer.name}`}
+                          className="rounded-lg border border-[var(--border-color)] p-2 text-[var(--text-muted)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]"
                         >
                           <Eye size={16} />
                         </button>
                         <button
                           onClick={() => openEditModal(customer)}
                           title="Edit customer"
-                          className="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400"
+                          aria-label={`Edit ${customer.name}`}
+                          className="rounded-lg border border-[var(--border-color)] p-2 text-[var(--text-muted)] transition hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-500"
                         >
                           <Pencil size={16} />
                         </button>
                         <button
                           onClick={() => handleDeactivate(customer)}
                           title="Deactivate customer"
-                          className="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-400"
+                          aria-label={`Deactivate ${customer.name}`}
+                          className="rounded-lg border border-[var(--border-color)] p-2 text-[var(--text-muted)] transition hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -474,7 +489,6 @@ const CustomersPage = () => {
         )}
       </div>
 
-      {/* Add / Edit modal */}
       {modal === 'form' && (
         <CustomerModal
           title={selectedCustomer ? 'Edit Customer' : 'Add New Customer'}
@@ -482,15 +496,13 @@ const CustomersPage = () => {
         >
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <h3 className="mb-3 text-sm font-semibold text-indigo-400">
+              <h3 className="mb-3 text-sm font-semibold text-[var(--accent)]">
                 CUSTOMER INFORMATION
               </h3>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label className="mb-2 block text-sm text-slate-300">
-                    Full Name *
-                  </label>
+                  <label className={labelClass}>Full Name *</label>
                   <input
                     required
                     maxLength={100}
@@ -504,9 +516,7 @@ const CustomersPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
-                    Email Address
-                  </label>
+                  <label className={labelClass}>Email Address</label>
                   <input
                     type="email"
                     maxLength={254}
@@ -520,9 +530,7 @@ const CustomersPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
-                    Phone Number
-                  </label>
+                  <label className={labelClass}>Phone Number</label>
                   <input
                     type="tel"
                     maxLength={20}
@@ -537,16 +545,14 @@ const CustomersPage = () => {
               </div>
             </div>
 
-            <div className="border-t border-white/10 pt-5">
-              <h3 className="mb-3 text-sm font-semibold text-indigo-400">
+            <div className="border-t border-[var(--border-color)] pt-5">
+              <h3 className="mb-3 text-sm font-semibold text-[var(--accent)]">
                 ADDRESS INFORMATION
               </h3>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label className="mb-2 block text-sm text-slate-300">
-                    Street Address
-                  </label>
+                  <label className={labelClass}>Street Address</label>
                   <input
                     value={form.address.street}
                     onChange={(event) =>
@@ -558,9 +564,7 @@ const CustomersPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
-                    City
-                  </label>
+                  <label className={labelClass}>City</label>
                   <input
                     value={form.address.city}
                     onChange={(event) =>
@@ -572,9 +576,7 @@ const CustomersPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
-                    State
-                  </label>
+                  <label className={labelClass}>State</label>
                   <input
                     value={form.address.state}
                     onChange={(event) =>
@@ -586,9 +588,7 @@ const CustomersPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
-                    Postal Code
-                  </label>
+                  <label className={labelClass}>Postal Code</label>
                   <input
                     value={form.address.postalCode}
                     onChange={(event) =>
@@ -600,9 +600,7 @@ const CustomersPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
-                    Country
-                  </label>
+                  <label className={labelClass}>Country</label>
                   <input
                     value={form.address.country}
                     onChange={(event) =>
@@ -615,11 +613,11 @@ const CustomersPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col-reverse gap-3 border-t border-white/10 pt-5 sm:flex-row sm:justify-end">
+            <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-color)] pt-5 sm:flex-row sm:justify-end">
               <button
                 type="button"
                 onClick={() => setModal(null)}
-                className="rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 hover:bg-white/5"
+                className="rounded-xl border border-[var(--border-color)] px-5 py-3 text-sm font-medium text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)]"
               >
                 Cancel
               </button>
@@ -627,7 +625,7 @@ const CustomersPage = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving && (
                   <LoaderCircle size={17} className="animate-spin" />
@@ -639,7 +637,6 @@ const CustomersPage = () => {
         </CustomerModal>
       )}
 
-      {/* Customer details modal */}
       {modal === 'details' && selectedCustomer && (
         <CustomerModal
           title="Customer Details"
@@ -647,54 +644,54 @@ const CustomersPage = () => {
         >
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 text-xl font-bold text-indigo-400">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-xl font-bold text-[var(--accent)]">
                 {(selectedCustomer.name || '?')
                   .charAt(0)
                   .toUpperCase()}
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white">
+              <div className="min-w-0">
+                <h3 className="break-words text-xl font-semibold text-[var(--text-primary)]">
                   {selectedCustomer.name}
                 </h3>
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 text-sm text-[var(--text-muted)]">
                   Customer record
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-white/10 bg-[#080d19] p-4">
-                <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+              <div className="rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] p-4">
+                <div className="mb-2 flex items-center gap-2 text-xs text-[var(--text-muted)]">
                   <Mail size={15} /> EMAIL
                 </div>
-                <p className="break-all text-sm text-white">
+                <p className="break-all text-sm text-[var(--text-primary)]">
                   {selectedCustomer.email || 'Not provided'}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-[#080d19] p-4">
-                <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+              <div className="rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] p-4">
+                <div className="mb-2 flex items-center gap-2 text-xs text-[var(--text-muted)]">
                   <Phone size={15} /> PHONE
                 </div>
-                <p className="text-sm text-white">
+                <p className="text-sm text-[var(--text-primary)]">
                   {selectedCustomer.phone || 'Not provided'}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-[#080d19] p-4 sm:col-span-2">
-                <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+              <div className="rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] p-4 sm:col-span-2">
+                <div className="mb-2 flex items-center gap-2 text-xs text-[var(--text-muted)]">
                   <MapPin size={15} /> ADDRESS
                 </div>
-                <p className="text-sm leading-6 text-white">
+                <p className="break-words text-sm leading-6 text-[var(--text-primary)]">
                   {getAddressText(selectedCustomer.address)}
                 </p>
               </div>
             </div>
 
-            <div className="flex justify-end border-t border-white/10 pt-5">
+            <div className="flex justify-end border-t border-[var(--border-color)] pt-5">
               <button
                 onClick={() => openEditModal(selectedCustomer)}
-                className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold hover:bg-indigo-500"
+                className="flex items-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-hover)]"
               >
                 <Pencil size={16} />
                 Edit Customer

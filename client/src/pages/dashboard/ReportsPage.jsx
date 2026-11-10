@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from 'react'
+﻿
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   ResponsiveContainer,
@@ -20,6 +21,8 @@ import {
   RefreshCw
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+
+import { useTheme } from '../../context/ThemeContext'
 
 import {
   getAnalyticsOverview,
@@ -65,15 +68,17 @@ const statusLabel = (value) =>
 
 function MetricCard({ title, value, subtitle, icon: Icon }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">{title}</p>
-        <div className="rounded-xl bg-indigo-500/15 p-2.5 text-indigo-400">
+    <div className="min-w-0 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-sm text-[var(--text-muted)]">{title}</p>
+        <div className="rounded-xl bg-[var(--accent-soft)] p-2.5 text-[var(--accent)]">
           <Icon size={19} />
         </div>
       </div>
-      <h3 className="mt-4 text-2xl font-bold text-white">{value}</h3>
-      <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+      <h3 className="mt-4 break-words text-2xl font-bold text-[var(--text-primary)]">
+        {value}
+      </h3>
+      <p className="mt-1 break-words text-xs text-[var(--text-muted)]">{subtitle}</p>
     </div>
   )
 }
@@ -81,6 +86,7 @@ function MetricCard({ title, value, subtitle, icon: Icon }) {
 function ReportsPage() {
   const { activeTenant } = useSelector((state) => state.auth)
   const tenantId = activeTenant?._id || activeTenant?.id
+  const { theme } = useTheme()
 
   const initialDates = getDates(30)
 
@@ -94,6 +100,17 @@ function ReportsPage() {
   const [topProducts, setTopProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  const chartGrid = theme === 'light' ? '#c5e3f7' : '#263247'
+  const chartAxis = theme === 'light' ? '#64839c' : '#94a3b8'
+  const chartAccent = theme === 'light' ? '#168bd4' : '#818cf8'
+
+  const tooltipStyle = {
+    backgroundColor: theme === 'light' ? '#ffffff' : '#111c30',
+    border: `1px solid ${theme === 'light' ? '#c5e3f7' : '#334155'}`,
+    borderRadius: 12,
+    color: theme === 'light' ? '#12304a' : '#f8fafc'
+  }
 
   const loadReports = async () => {
     if (!tenantId) {
@@ -159,11 +176,19 @@ function ReportsPage() {
 
   const bestSeller = topProducts[0]
 
+  const cardClass =
+    'rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]'
+
+  const inputClass =
+    'min-w-0 rounded-lg border border-[var(--border-color)] bg-[var(--app-bg)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--accent)]'
+
   if (!tenantId) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-8 text-center">
-        <h2 className="text-xl font-bold text-white">Select a business</h2>
-        <p className="mt-2 text-sm text-slate-400">
+      <div className={`${cardClass} p-8 text-center`}>
+        <h2 className="text-xl font-bold text-[var(--text-primary)]">
+          Select a business
+        </h2>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">
           Choose a business workspace to view its reports.
         </p>
       </div>
@@ -171,16 +196,16 @@ function ReportsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-        <div>
-          <p className="text-sm font-medium text-indigo-400">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[var(--accent)]">
             BUSINESS INTELLIGENCE
           </p>
-          <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-2 text-2xl font-bold text-[var(--text-primary)] sm:text-3xl">
             Reports & Insights
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
             Understand revenue, orders and product performance.
           </p>
         </div>
@@ -188,15 +213,15 @@ function ReportsPage() {
         <button
           onClick={loadReports}
           disabled={loading}
-          className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)] disabled:opacity-50"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh Reports
         </button>
       </div>
 
-      <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0d1424] p-4 sm:flex-row sm:items-center sm:flex-wrap">
-        <span className="text-sm font-medium text-slate-300">
+      <div className={`${cardClass} flex flex-col gap-3 p-4 sm:flex-row sm:flex-wrap sm:items-center`}>
+        <span className="text-sm font-medium text-[var(--text-secondary)]">
           Revenue period
         </span>
 
@@ -206,8 +231,8 @@ function ReportsPage() {
             onClick={() => selectRange(days)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               range === String(days)
-                ? 'bg-indigo-500 text-white'
-                : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                ? 'bg-[var(--accent)] text-white'
+                : 'bg-[var(--app-bg)] text-[var(--text-secondary)] hover:bg-[var(--card-bg-hover)]'
             }`}
           >
             {days} days
@@ -218,8 +243,8 @@ function ReportsPage() {
           onClick={() => setRange('custom')}
           className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
             range === 'custom'
-              ? 'bg-indigo-500 text-white'
-              : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+              ? 'bg-[var(--accent)] text-white'
+              : 'bg-[var(--app-bg)] text-[var(--text-secondary)] hover:bg-[var(--card-bg-hover)]'
           }`}
         >
           Custom
@@ -232,30 +257,30 @@ function ReportsPage() {
               value={from}
               max={to}
               onChange={(event) => setFrom(event.target.value)}
-              className="rounded-lg border border-white/10 bg-[#080d19] px-3 py-2 text-sm text-white"
+              className={inputClass}
             />
-            <span className="text-slate-500">to</span>
+            <span className="text-[var(--text-muted)]">to</span>
             <input
               type="date"
               value={to}
               min={from}
               onChange={(event) => setTo(event.target.value)}
-              className="rounded-lg border border-white/10 bg-[#080d19] px-3 py-2 text-sm text-white"
+              className={inputClass}
             />
           </div>
         )}
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-12 text-center text-slate-400">
+        <div className={`${cardClass} p-12 text-center text-[var(--text-muted)]`}>
           Loading business reports...
         </div>
       ) : error ? (
         <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
-          <p className="font-medium text-red-400">{error}</p>
+          <p className="font-medium text-red-500">{error}</p>
           <button
             onClick={loadReports}
-            className="mt-3 text-sm text-white underline"
+            className="mt-3 text-sm text-[var(--text-primary)] underline"
           >
             Try again
           </button>
@@ -289,112 +314,102 @@ function ReportsPage() {
             />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5 xl:col-span-2">
+          <div className="grid min-w-0 gap-6 xl:grid-cols-3">
+            <div className={`${cardClass} min-w-0 p-4 sm:p-5 xl:col-span-2`}>
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-white">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)]">
                   Revenue Trends
                 </h2>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-[var(--text-muted)]">
                   Daily paid revenue from {from} to {to}
                 </p>
               </div>
 
-              <div className="h-72">
+              <div className="h-72 min-w-0">
                 {chartRevenue.length ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartRevenue}>
                       <defs>
                         <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#818cf8" stopOpacity={0.35} />
-                          <stop offset="100%" stopColor="#818cf8" stopOpacity={0} />
+                          <stop offset="0%" stopColor={chartAccent} stopOpacity={0.35} />
+                          <stop offset="100%" stopColor={chartAccent} stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid stroke="#ffffff12" vertical={false} />
+                      <CartesianGrid stroke={chartGrid} vertical={false} />
                       <XAxis
                         dataKey="label"
-                        stroke="#64748b"
+                        stroke={chartAxis}
                         tickLine={false}
                         axisLine={false}
                         tick={{ fontSize: 11 }}
                       />
                       <YAxis
-                        stroke="#64748b"
+                        stroke={chartAxis}
                         tickLine={false}
                         axisLine={false}
                         tick={{ fontSize: 11 }}
                         tickFormatter={(value) => `₹${value}`}
                       />
                       <Tooltip
-                        contentStyle={{
-                          background: '#111827',
-                          border: '1px solid #334155',
-                          borderRadius: 12,
-                          color: '#fff'
-                        }}
+                        contentStyle={tooltipStyle}
                         formatter={(value) => [currency.format(value), 'Revenue']}
                       />
                       <Area
                         type="monotone"
                         dataKey="revenue"
-                        stroke="#818cf8"
+                        stroke={chartAccent}
                         strokeWidth={3}
                         fill="url(#revenueFill)"
                       />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="flex h-full items-center justify-center text-sm text-slate-500">
+                  <div className="flex h-full items-center justify-center text-center text-sm text-[var(--text-muted)]">
                     No paid revenue found for this period.
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-              <h2 className="text-lg font-semibold text-white">
+            <div className={`${cardClass} min-w-0 p-4 sm:p-5`}>
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">
                 Order Status
               </h2>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-[var(--text-muted)]">
                 Orders grouped by current status
               </p>
 
-              <div className="mt-6 h-64">
+              <div className="mt-6 h-64 min-w-0">
                 {chartOrders.length ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartOrders} layout="vertical">
-                      <CartesianGrid stroke="#ffffff12" horizontal={false} />
+                      <CartesianGrid stroke={chartGrid} horizontal={false} />
                       <XAxis
                         type="number"
-                        stroke="#64748b"
+                        stroke={chartAxis}
                         tick={{ fontSize: 11 }}
                         allowDecimals={false}
                       />
                       <YAxis
                         type="category"
                         dataKey="label"
-                        stroke="#64748b"
+                        stroke={chartAxis}
                         width={85}
                         tick={{ fontSize: 11 }}
                       />
                       <Tooltip
-                        contentStyle={{
-                          background: '#111827',
-                          border: '1px solid #334155',
-                          borderRadius: 12,
-                          color: '#fff'
-                        }}
+                        contentStyle={tooltipStyle}
                       />
                       <Bar
                         dataKey="count"
                         name="Orders"
-                        fill="#818cf8"
+                        fill={chartAccent}
                         radius={[0, 6, 6, 0]}
                       />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="flex h-full items-center justify-center text-sm text-slate-500">
+                  <div className="flex h-full items-center justify-center text-center text-sm text-[var(--text-muted)]">
                     No orders recorded.
                   </div>
                 )}
@@ -402,12 +417,12 @@ function ReportsPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
+          <div className={`${cardClass} min-w-0 p-4 sm:p-5`}>
             <div className="mb-5">
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">
                 Top-Selling Products
               </h2>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-[var(--text-muted)]">
                 Ranked by units sold across paid, non-cancelled orders.
               </p>
             </div>
@@ -416,7 +431,7 @@ function ReportsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[560px] text-left text-sm">
                   <thead>
-                    <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-500">
+                    <tr className="border-b border-[var(--border-color)] text-xs uppercase tracking-wider text-[var(--text-muted)]">
                       <th className="pb-3 pr-4">Product</th>
                       <th className="pb-3 pr-4">SKU</th>
                       <th className="pb-3 pr-4">Units Sold</th>
@@ -427,18 +442,18 @@ function ReportsPage() {
                     {topProducts.map((product, index) => (
                       <tr
                         key={`${product.productId}-${index}`}
-                        className="border-b border-white/5 last:border-0"
+                        className="border-b border-[var(--border-color)]/60 last:border-0"
                       >
-                        <td className="py-4 pr-4 font-medium text-white">
+                        <td className="py-4 pr-4 font-medium text-[var(--text-primary)]">
                           {product.productName}
                         </td>
-                        <td className="py-4 pr-4 text-slate-400">
+                        <td className="py-4 pr-4 text-[var(--text-muted)]">
                           {product.sku || '—'}
                         </td>
-                        <td className="py-4 pr-4 text-slate-300">
+                        <td className="py-4 pr-4 text-[var(--text-secondary)]">
                           {product.unitsSold}
                         </td>
-                        <td className="py-4 text-right font-medium text-emerald-400">
+                        <td className="py-4 text-right font-medium text-emerald-500">
                           {currency.format(product.revenue || 0)}
                         </td>
                       </tr>
@@ -447,18 +462,20 @@ function ReportsPage() {
                 </table>
               </div>
             ) : (
-              <p className="py-8 text-center text-sm text-slate-500">
+              <p className="py-8 text-center text-sm text-[var(--text-muted)]">
                 No product sales available yet.
               </p>
             )}
           </div>
 
-          <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
+          <div className="rounded-2xl border border-[var(--accent)]/20 bg-[var(--accent-soft)] p-5">
             <div className="flex items-start gap-3">
-              <TrendingUp size={20} className="mt-0.5 text-indigo-400" />
-              <div>
-                <h3 className="font-semibold text-white">Business Insight</h3>
-                <p className="mt-1 text-sm text-slate-400">
+              <TrendingUp size={20} className="mt-0.5 shrink-0 text-[var(--accent)]" />
+              <div className="min-w-0">
+                <h3 className="font-semibold text-[var(--text-primary)]">
+                  Business Insight
+                </h3>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
                   {bestSeller
                     ? `${bestSeller.productName} is your current top-selling product with ${bestSeller.unitsSold} units sold and ${currency.format(bestSeller.revenue || 0)} in sales.`
                     : 'Your top-selling product insights will appear here when paid orders contain product sales.'}

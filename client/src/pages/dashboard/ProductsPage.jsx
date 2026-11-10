@@ -187,52 +187,62 @@ function ProductsPage() {
       maximumFractionDigits: 2
     }).format(price || 0)
 
+  const inputClass = 'w-full min-w-0 rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]'
+
+  const labelClass = 'mb-2 block text-sm font-medium text-[var(--text-secondary)]'
+
+  const primaryButtonClass = 'flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50'
+
   if (!tenantId) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-8 text-slate-300">
+      <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 text-[var(--text-secondary)] sm:p-8">
         Please select a business to manage products.
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-sm text-indigo-400">INVENTORY MANAGEMENT</p>
-          <h1 className="mt-2 text-2xl font-bold text-white">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold tracking-wide text-[var(--accent)]">
+            INVENTORY MANAGEMENT
+          </p>
+          <h1 className="mt-2 text-2xl font-bold text-[var(--text-primary)] sm:text-3xl">
             Products
           </h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
             Manage your business products and stock.
           </p>
         </div>
 
         <button
           onClick={openCreateForm}
-          className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
+          className={`${primaryButtonClass} w-full shrink-0 sm:w-auto`}
         >
           <Plus size={18} />
           Add Product
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-400">Total Products</p>
-            <Package className="text-indigo-400" size={20} />
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-[var(--text-muted)]">Total Products</p>
+            <div className="rounded-xl bg-[var(--accent-soft)] p-2 text-[var(--accent)]">
+              <Package size={20} />
+            </div>
           </div>
-          <p className="mt-3 text-2xl font-bold text-white">
+          <p className="mt-3 text-2xl font-bold text-[var(--text-primary)]">
             {products.length}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <p className="text-sm text-slate-400">Total Units</p>
-          <p className="mt-3 text-2xl font-bold text-white">
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <p className="text-sm font-medium text-[var(--text-muted)]">Total Units</p>
+          <p className="mt-3 text-2xl font-bold text-[var(--text-primary)]">
             {products.reduce(
               (total, product) => total + Number(product.stockQuantity || 0),
               0
@@ -240,9 +250,9 @@ function ProductsPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <p className="text-sm text-slate-400">Low Stock Products</p>
-          <p className="mt-3 text-2xl font-bold text-amber-400">
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm sm:col-span-2 xl:col-span-1">
+          <p className="text-sm font-medium text-[var(--text-muted)]">Low Stock Products</p>
+          <p className="mt-3 text-2xl font-bold text-amber-500">
             {products.filter(
               (product) =>
                 Number(product.stockQuantity) <=
@@ -253,32 +263,33 @@ function ProductsPage() {
 
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#0d1424]">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-sm">
 
-        <div className="flex flex-col justify-between gap-4 border-b border-white/10 p-5 sm:flex-row sm:items-center">
+        <div className="flex flex-col justify-between gap-4 border-b border-[var(--border-color)] p-4 sm:p-5 lg:flex-row lg:items-center">
           <div>
-            <h2 className="font-semibold text-white">
+            <h2 className="font-semibold text-[var(--text-primary)]">
               Product Catalogue
             </h2>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-[var(--text-muted)]">
               {filteredProducts.length} products found
             </p>
           </div>
 
-          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#111b2e] px-3 py-2">
-            <Search size={17} className="text-slate-400" />
+          <div className="flex w-full items-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] px-3 py-2.5 lg:w-auto">
+            <Search size={17} className="shrink-0 text-[var(--text-muted)]" />
 
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search products..."
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500 sm:w-52"
+              className="w-full min-w-0 bg-transparent text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] lg:w-52"
             />
 
             <button
               onClick={loadData}
-              className="text-slate-400 transition hover:text-white"
+              className="shrink-0 rounded-lg p-1.5 text-[var(--text-muted)] transition hover:bg-[var(--card-bg-hover)] hover:text-[var(--accent)]"
               title="Refresh products"
+              aria-label="Refresh products"
             >
               <RefreshCw size={16} />
             </button>
@@ -286,23 +297,23 @@ function ProductsPage() {
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-slate-400">
+          <div className="p-12 text-center text-sm text-[var(--text-muted)]">
             Loading products...
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="p-12 text-center">
-            <Package size={36} className="mx-auto text-slate-500" />
-            <p className="mt-4 font-medium text-white">
+            <Package size={36} className="mx-auto text-[var(--text-muted)]" />
+            <p className="mt-4 font-medium text-[var(--text-primary)]">
               No products found
             </p>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               Add your first product to get started.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-[#111b2e] text-xs uppercase text-slate-400">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[680px] text-left text-sm">
+              <thead className="bg-[var(--app-bg)] text-xs uppercase tracking-wide text-[var(--text-muted)]">
                 <tr>
                   <th className="px-5 py-4">Product</th>
                   <th className="px-5 py-4">SKU</th>
@@ -313,40 +324,43 @@ function ProductsPage() {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-[var(--border-color)]">
                 {filteredProducts.map((product) => {
                   const lowStock =
                     Number(product.stockQuantity) <=
                     Number(product.lowStockThreshold)
 
                   return (
-                    <tr key={product._id} className="transition hover:bg-white/[0.02]">
+                    <tr
+                      key={product._id}
+                      className="transition hover:bg-[var(--card-bg-hover)]"
+                    >
                       <td className="px-5 py-4">
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-[var(--text-primary)]">
                           {product.name}
                         </p>
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-[var(--text-muted)]">
                           {product.categoryId?.name || 'Uncategorised'}
                         </p>
                       </td>
 
-                      <td className="px-5 py-4 text-slate-400">
+                      <td className="px-5 py-4 text-[var(--text-secondary)]">
                         {product.sku}
                       </td>
 
-                      <td className="px-5 py-4 font-medium text-white">
+                      <td className="px-5 py-4 font-medium text-[var(--text-primary)]">
                         {formatPrice(product.price)}
                       </td>
 
-                      <td className="px-5 py-4 text-slate-300">
+                      <td className="px-5 py-4 text-[var(--text-secondary)]">
                         {product.stockQuantity}
                       </td>
 
                       <td className="px-5 py-4">
-                        <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+                        <span className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${
                           lowStock
-                            ? 'bg-amber-500/10 text-amber-400'
-                            : 'bg-emerald-500/10 text-emerald-400'
+                            ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                            : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                         }`}>
                           {lowStock ? 'Low Stock' : 'In Stock'}
                         </span>
@@ -356,16 +370,18 @@ function ProductsPage() {
                         <div className="flex justify-end gap-2">
                           <button
                             onClick={() => openEditForm(product)}
-                            className="rounded-lg p-2 text-slate-400 hover:bg-indigo-500/10 hover:text-indigo-400"
+                            className="rounded-lg p-2 text-[var(--text-muted)] transition hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]"
                             title="Edit product"
+                            aria-label={`Edit ${product.name}`}
                           >
                             <Pencil size={16} />
                           </button>
 
                           <button
                             onClick={() => handleDelete(product._id)}
-                            className="rounded-lg p-2 text-slate-400 hover:bg-red-500/10 hover:text-red-400"
+                            className="rounded-lg p-2 text-[var(--text-muted)] transition hover:bg-red-500/10 hover:text-red-500"
                             title="Delete product"
+                            aria-label={`Delete ${product.name}`}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -381,32 +397,40 @@ function ProductsPage() {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 p-4">
-          <div className="my-auto w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0d1424] shadow-2xl">
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/60 p-3 backdrop-blur-sm sm:items-center sm:p-5"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setShowForm(false)
+            }
+          }}
+        >
+          <div className="my-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-2xl">
 
-            <div className="flex items-center justify-between border-b border-white/10 p-5">
-              <div>
-                <h2 className="text-lg font-semibold text-white">
+            <div className="flex items-center justify-between gap-3 border-b border-[var(--border-color)] p-4 sm:p-5">
+              <div className="min-w-0">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)]">
                   {editingProduct ? 'Edit Product' : 'Add New Product'}
                 </h2>
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-[var(--text-muted)]">
                   Enter your product information.
                 </p>
               </div>
 
               <button
                 onClick={() => setShowForm(false)}
-                className="rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-white"
+                className="shrink-0 rounded-lg p-2 text-[var(--text-muted)] transition hover:bg-[var(--card-bg-hover)] hover:text-[var(--text-primary)]"
+                aria-label="Close product form"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 p-5">
+            <form onSubmit={handleSubmit} className="max-h-[calc(100vh-130px)] space-y-4 overflow-y-auto p-4 sm:p-5">
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm text-slate-300">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="min-w-0">
+                  <label className={labelClass}>
                     Product Name *
                   </label>
                   <input
@@ -416,12 +440,12 @@ function ProductsPage() {
                     required
                     maxLength={150}
                     placeholder="Classic Cotton T-Shirt"
-                    className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                    className={inputClass}
                   />
                 </div>
 
-                <div>
-                  <label className="mb-2 block text-sm text-slate-300">
+                <div className="min-w-0">
+                  <label className={labelClass}>
                     SKU *
                   </label>
                   <input
@@ -430,13 +454,13 @@ function ProductsPage() {
                     onChange={handleChange}
                     required
                     placeholder="UT-TS-001"
-                    className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-slate-300">
+                <label className={labelClass}>
                   Description
                 </label>
                 <textarea
@@ -444,19 +468,19 @@ function ProductsPage() {
                   value={form.description}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm text-slate-300">
+                <label className={labelClass}>
                   Category
                 </label>
                 <select
                   name="categoryId"
                   value={form.categoryId}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                  className={inputClass}
                 >
                   <option value="">No category</option>
                   {categories.map((category) => (
@@ -467,9 +491,9 @@ function ProductsPage() {
                 </select>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
+                  <label className={labelClass}>
                     Selling Price (₹) *
                   </label>
                   <input
@@ -480,12 +504,12 @@ function ProductsPage() {
                     min="0"
                     step="0.01"
                     required
-                    className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
+                  <label className={labelClass}>
                     Cost Price (₹)
                   </label>
                   <input
@@ -495,12 +519,12 @@ function ProductsPage() {
                     onChange={handleChange}
                     min="0"
                     step="0.01"
-                    className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
+                  <label className={labelClass}>
                     Stock Quantity
                   </label>
                   <input
@@ -510,12 +534,12 @@ function ProductsPage() {
                     onChange={handleChange}
                     min="0"
                     required
-                    className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                    className={inputClass}
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-slate-300">
+                  <label className={labelClass}>
                     Low Stock Threshold
                   </label>
                   <input
@@ -524,16 +548,16 @@ function ProductsPage() {
                     value={form.lowStockThreshold}
                     onChange={handleChange}
                     min="0"
-                    className="w-full rounded-xl border border-white/10 bg-[#111b2e] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 border-t border-white/10 pt-4">
+              <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-color)] pt-4 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="rounded-xl border border-white/10 px-5 py-3 text-sm text-slate-300 hover:bg-white/5"
+                  className="rounded-xl border border-[var(--border-color)] px-5 py-3 text-sm font-medium text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)]"
                 >
                   Cancel
                 </button>
@@ -541,7 +565,7 @@ function ProductsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+                  className={primaryButtonClass}
                 >
                   {saving ? 'Saving...' : editingProduct ? 'Save Changes' : 'Create Product'}
                 </button>

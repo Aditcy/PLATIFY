@@ -1,11 +1,95 @@
+
 @import "tailwindcss";
 
+/* Global foundation */
 * {
   box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  min-height: 100vh;
   font-family: Inter, system-ui, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Dark theme */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --app-bg: #080d19;
+  --sidebar-bg: #0d1424;
+  --header-bg: #080d19;
+  --card-bg: #111c30;
+  --card-bg-hover: #17253d;
+  --border-color: rgba(148, 163, 184, 0.14);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --accent-soft: rgba(99, 102, 241, 0.14);
+}
+
+/* Bright light-blue theme */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --app-bg: #eaf6ff;
+  --sidebar-bg: #d9efff;
+  --header-bg: rgba(239, 248, 255, 0.94);
+  --card-bg: #ffffff;
+  --card-bg-hover: #f0f9ff;
+  --border-color: #c5e3f7;
+  --text-primary: #12304a;
+  --text-secondary: #355873;
+  --text-muted: #64839c;
+  --accent: #168bd4;
+  --accent-hover: #0876bd;
+  --accent-soft: #d9efff;
+}
+
+/* Responsive media foundation */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#root {
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Prevent wide content from breaking smaller screens */
+table {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }

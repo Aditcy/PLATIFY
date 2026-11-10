@@ -39,6 +39,12 @@ const formatDate = (value) =>
       })
     : '—'
 
+const inputClass =
+  'w-full min-w-0 rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]'
+
+const labelClass =
+  'mb-2 block text-sm font-medium text-[var(--text-secondary)]'
+
 function InventoryPage() {
   const { activeTenant } = useSelector((state) => state.auth)
   const tenantId = activeTenant?._id || activeTenant?.id
@@ -221,14 +227,14 @@ function InventoryPage() {
 
   const statusClasses = (status) => {
     if (status === 'In Stock') {
-      return 'bg-emerald-500/10 text-emerald-400'
+      return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
     }
 
     if (status === 'Low Stock') {
-      return 'bg-amber-500/10 text-amber-400'
+      return 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
     }
 
-    return 'bg-red-500/10 text-red-400'
+    return 'bg-red-500/10 text-red-600 dark:text-red-400'
   }
 
   const movementLabel = (type) => {
@@ -238,22 +244,23 @@ function InventoryPage() {
   }
 
   const movementClasses = (type) => {
-    if (type === 'stock_in') return 'text-emerald-400'
-    if (type === 'stock_out') return 'text-red-400'
-    return 'text-amber-400'
+    if (type === 'stock_in') return 'text-emerald-600 dark:text-emerald-400'
+    if (type === 'stock_out') return 'text-red-600 dark:text-red-400'
+    return 'text-amber-600 dark:text-amber-400'
   }
 
   return (
-    <div className="space-y-7">
+    <div className="min-w-0 space-y-7">
+
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
             Inventory Management
           </p>
-          <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-2 text-2xl font-bold text-[var(--text-primary)] sm:text-3xl">
             Inventory
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
             Monitor stock levels and manage inventory movements.
           </p>
         </div>
@@ -261,7 +268,7 @@ function InventoryPage() {
         <button
           onClick={() => loadInventory(true)}
           disabled={refreshing || loading}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#0d1424] px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/5 disabled:opacity-50"
+          className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-3 text-sm font-medium text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)] disabled:opacity-50 sm:w-auto"
         >
           <RefreshCw
             size={17}
@@ -271,78 +278,82 @@ function InventoryPage() {
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-400">Total Products</p>
-            <Package className="text-indigo-400" size={21} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-[var(--text-muted)]">Total Products</p>
+            <Package className="shrink-0 text-[var(--accent)]" size={21} />
           </div>
-          <p className="mt-3 text-3xl font-bold text-white">
+          <p className="mt-3 text-3xl font-bold text-[var(--text-primary)]">
             {summary.totalProducts}
           </p>
-          <p className="mt-2 text-xs text-slate-500">Active products</p>
+          <p className="mt-2 text-xs text-[var(--text-muted)]">Active products</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-400">Total Units</p>
-            <Boxes className="text-blue-400" size={21} />
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-[var(--text-muted)]">Total Units</p>
+            <Boxes className="shrink-0 text-blue-500" size={21} />
           </div>
-          <p className="mt-3 text-3xl font-bold text-white">
+          <p className="mt-3 text-3xl font-bold text-[var(--text-primary)]">
             {summary.totalUnits}
           </p>
-          <p className="mt-2 text-xs text-slate-500">Units in stock</p>
+          <p className="mt-2 text-xs text-[var(--text-muted)]">Units in stock</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-400">Low Stock Products</p>
-            <AlertTriangle className="text-amber-400" size={21} />
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-[var(--text-muted)]">Low Stock Products</p>
+            <AlertTriangle className="shrink-0 text-amber-500" size={21} />
           </div>
-          <p className="mt-3 text-3xl font-bold text-white">
+          <p className="mt-3 text-3xl font-bold text-[var(--text-primary)]">
             {summary.lowStockCount}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-[var(--text-muted)]">
             At or below stock threshold
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-400">Inventory Cost Value</p>
-            <IndianRupee className="text-emerald-400" size={21} />
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-[var(--text-muted)]">Inventory Cost Value</p>
+            <IndianRupee className="shrink-0 text-emerald-500" size={21} />
           </div>
-          <p className="mt-3 text-2xl font-bold text-white">
+          <p className="mt-3 break-words text-2xl font-bold text-[var(--text-primary)]">
             {formatPrice(summary.inventoryCostValue)}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-[var(--text-muted)]">
             Stock quantity × cost price
           </p>
         </div>
       </div>
 
       {lowStockProducts.length > 0 && (
-        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-5">
+        <div className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.04] p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
-            <AlertTriangle size={19} className="text-amber-400" />
-            <h2 className="font-semibold text-white">Low Stock Alerts</h2>
+            <AlertTriangle size={19} className="text-amber-500" />
+            <h2 className="font-semibold text-[var(--text-primary)]">
+              Low Stock Alerts
+            </h2>
           </div>
 
           <div className="space-y-3">
             {lowStockProducts.map((product) => (
               <div
                 key={product._id}
-                className="flex flex-col justify-between gap-3 rounded-xl border border-white/5 bg-[#0d1424] p-4 sm:flex-row sm:items-center"
+                className="flex flex-col justify-between gap-3 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:flex-row sm:items-center"
               >
-                <div>
-                  <p className="font-medium text-white">{product.name}</p>
-                  <p className="mt-1 text-xs text-slate-500">
+                <div className="min-w-0">
+                  <p className="font-medium text-[var(--text-primary)]">
+                    {product.name}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--text-muted)]">
                     SKU: {product.sku}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between gap-4 sm:justify-end">
-                  <p className="text-sm text-amber-400">
+                  <p className="text-sm font-medium text-amber-600 dark:text-amber-400">
                     {product.stockQuantity} units remaining
                   </p>
 
@@ -353,7 +364,7 @@ function InventoryPage() {
                       )
                       if (fullProduct) openAdjustment(fullProduct, 'stock_in')
                     }}
-                    className="rounded-lg bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-400 hover:bg-amber-500/20"
+                    className="shrink-0 rounded-lg bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-600 transition hover:bg-amber-500/20 dark:text-amber-400"
                   >
                     Restock
                   </button>
@@ -364,40 +375,40 @@ function InventoryPage() {
         </div>
       )}
 
-      <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5 sm:p-6">
+      <div className="min-w-0 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-sm sm:p-6">
         <div className="mb-5 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
           <div>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
               Stock Overview
             </h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               {filteredProducts.length} products found
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative">
+          <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
+            <div className="relative min-w-0 flex-1">
               <Search
                 size={17}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
               />
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search products..."
-                className="w-full rounded-xl border border-white/10 bg-[#080e1b] py-2.5 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500 sm:w-56"
+                className={`${inputClass} py-2.5 pl-10 sm:w-56`}
               />
             </div>
 
-            <div className="relative">
+            <div className="relative min-w-0 sm:w-48">
               <SlidersHorizontal
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
               />
               <select
                 value={stockFilter}
                 onChange={(event) => setStockFilter(event.target.value)}
-                className="w-full appearance-none rounded-xl border border-white/10 bg-[#080e1b] py-2.5 pl-9 pr-8 text-sm text-slate-300 outline-none focus:border-indigo-500 sm:w-44"
+                className={`${inputClass} appearance-none py-2.5 pl-9 pr-8`}
               >
                 <option value="all">All Stock</option>
                 <option value="healthy">In Stock</option>
@@ -408,19 +419,19 @@ function InventoryPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[var(--text-muted)]">
             <LoaderCircle size={18} className="animate-spin" />
             Loading inventory...
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="py-14 text-center text-sm text-slate-400">
+          <div className="py-14 text-center text-sm text-[var(--text-muted)]">
             No products found.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="w-full overflow-x-auto">
             <table className="w-full min-w-[760px] text-left">
               <thead>
-                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-[var(--border-color)] bg-[var(--app-bg)] text-xs uppercase tracking-wider text-[var(--text-muted)]">
                   <th className="px-4 py-4 font-medium">Product</th>
                   <th className="px-4 py-4 font-medium">SKU</th>
                   <th className="px-4 py-4 font-medium">Stock</th>
@@ -437,22 +448,22 @@ function InventoryPage() {
                   return (
                     <tr
                       key={product._id}
-                      className="border-b border-white/5 hover:bg-white/[0.02]"
+                      className="border-b border-[var(--border-color)] transition hover:bg-[var(--card-bg-hover)]"
                     >
-                      <td className="px-4 py-4 font-medium text-white">
+                      <td className="px-4 py-4 font-medium text-[var(--text-primary)]">
                         {product.name}
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-400">
+                      <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">
                         {product.sku}
                       </td>
-                      <td className="px-4 py-4 text-sm font-semibold text-white">
+                      <td className="px-4 py-4 text-sm font-semibold text-[var(--text-primary)]">
                         {product.stockQuantity}
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-400">
+                      <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">
                         {product.lowStockThreshold}
                       </td>
                       <td className="px-4 py-4">
-                        <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusClasses(status)}`}>
+                        <span className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${statusClasses(status)}`}>
                           {status}
                         </span>
                       </td>
@@ -461,7 +472,8 @@ function InventoryPage() {
                           <button
                             onClick={() => openAdjustment(product, 'stock_in')}
                             title="Stock in"
-                            className="rounded-lg border border-white/10 p-2 text-emerald-400 hover:bg-emerald-500/10"
+                            aria-label={`Add stock for ${product.name}`}
+                            className="rounded-lg border border-[var(--border-color)] p-2 text-emerald-600 transition hover:bg-emerald-500/10 dark:text-emerald-400"
                           >
                             <ArrowDownToLine size={16} />
                           </button>
@@ -469,7 +481,8 @@ function InventoryPage() {
                           <button
                             onClick={() => openAdjustment(product, 'stock_out')}
                             title="Stock out"
-                            className="rounded-lg border border-white/10 p-2 text-red-400 hover:bg-red-500/10"
+                            aria-label={`Remove stock for ${product.name}`}
+                            className="rounded-lg border border-[var(--border-color)] p-2 text-red-600 transition hover:bg-red-500/10 dark:text-red-400"
                           >
                             <ArrowUpFromLine size={16} />
                           </button>
@@ -477,7 +490,8 @@ function InventoryPage() {
                           <button
                             onClick={() => openAdjustment(product, 'adjustment')}
                             title="Manual adjustment"
-                            className="rounded-lg border border-white/10 p-2 text-amber-400 hover:bg-amber-500/10"
+                            aria-label={`Adjust stock for ${product.name}`}
+                            className="rounded-lg border border-[var(--border-color)] p-2 text-amber-600 transition hover:bg-amber-500/10 dark:text-amber-400"
                           >
                             <SlidersHorizontal size={16} />
                           </button>
@@ -492,34 +506,34 @@ function InventoryPage() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5 sm:p-6">
+      <div className="min-w-0 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-sm sm:p-6">
         <div className="mb-5 flex items-center gap-3">
-          <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
+          <div className="rounded-xl bg-[var(--accent-soft)] p-3 text-[var(--accent)]">
             <History size={21} />
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-white">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
               Recent Stock Movements
             </h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               Latest inventory activity (maximum 100 records)
             </p>
           </div>
         </div>
 
         {loading ? (
-          <p className="py-8 text-center text-sm text-slate-400">
+          <p className="py-8 text-center text-sm text-[var(--text-muted)]">
             Loading movements...
           </p>
         ) : movements.length === 0 ? (
-          <p className="py-8 text-center text-sm text-slate-400">
+          <p className="py-8 text-center text-sm text-[var(--text-muted)]">
             No stock movements recorded yet.
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="w-full overflow-x-auto">
             <table className="w-full min-w-[700px] text-left">
               <thead>
-                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-[var(--border-color)] bg-[var(--app-bg)] text-xs uppercase tracking-wider text-[var(--text-muted)]">
                   <th className="px-4 py-4 font-medium">Product</th>
                   <th className="px-4 py-4 font-medium">Movement</th>
                   <th className="px-4 py-4 font-medium">Quantity</th>
@@ -533,13 +547,13 @@ function InventoryPage() {
                 {movements.map((movement) => (
                   <tr
                     key={movement._id}
-                    className="border-b border-white/5"
+                    className="border-b border-[var(--border-color)]"
                   >
                     <td className="px-4 py-4">
-                      <p className="text-sm font-medium text-white">
+                      <p className="text-sm font-medium text-[var(--text-primary)]">
                         {movement.productId?.name || 'Product unavailable'}
                       </p>
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">
                         {movement.productId?.sku || '—'}
                       </p>
                     </td>
@@ -548,19 +562,19 @@ function InventoryPage() {
                       {movementLabel(movement.type)}
                     </td>
 
-                    <td className="px-4 py-4 text-sm text-slate-300">
+                    <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">
                       {movement.quantity}
                     </td>
 
-                    <td className="px-4 py-4 text-sm text-slate-400">
+                    <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">
                       {movement.previousStock}
                     </td>
 
-                    <td className="px-4 py-4 text-sm font-semibold text-white">
+                    <td className="px-4 py-4 text-sm font-semibold text-[var(--text-primary)]">
                       {movement.newStock}
                     </td>
 
-                    <td className="px-4 py-4 text-xs text-slate-400">
+                    <td className="px-4 py-4 text-xs text-[var(--text-muted)]">
                       {formatDate(movement.createdAt)}
                     </td>
                   </tr>
@@ -572,18 +586,23 @@ function InventoryPage() {
       </div>
 
       {showModal && selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0d1424] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-              <div>
-                <h2 className="text-lg font-semibold text-white">
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/60 p-3 backdrop-blur-sm sm:items-center sm:p-5"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeModal()
+          }}
+        >
+          <div className="my-auto w-full max-w-lg overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-2xl">
+            <div className="flex items-center justify-between gap-3 border-b border-[var(--border-color)] px-4 py-5 sm:px-6">
+              <div className="min-w-0">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)]">
                   {formData.type === 'stock_in'
                     ? 'Stock In'
                     : formData.type === 'stock_out'
                       ? 'Stock Out'
                       : 'Manual Stock Adjustment'}
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 break-words text-sm text-[var(--text-muted)]">
                   {selectedProduct.name} · {selectedProduct.sku}
                 </p>
               </div>
@@ -591,22 +610,23 @@ function InventoryPage() {
               <button
                 onClick={closeModal}
                 disabled={saving}
-                className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white"
+                aria-label="Close stock adjustment"
+                className="shrink-0 rounded-lg p-2 text-[var(--text-muted)] transition hover:bg-[var(--card-bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
               >
                 <X size={19} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5 p-6">
-              <div className="rounded-xl border border-white/5 bg-[#080e1b] p-4">
-                <p className="text-sm text-slate-400">Current stock</p>
-                <p className="mt-1 text-2xl font-bold text-white">
+            <form onSubmit={handleSubmit} className="max-h-[calc(100vh-140px)] space-y-5 overflow-y-auto p-4 sm:p-6">
+              <div className="rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] p-4">
+                <p className="text-sm text-[var(--text-muted)]">Current stock</p>
+                <p className="mt-1 text-2xl font-bold text-[var(--text-primary)]">
                   {selectedProduct.stockQuantity} units
                 </p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
+                <label className={labelClass}>
                   Movement Type
                 </label>
 
@@ -614,7 +634,7 @@ function InventoryPage() {
                   name="type"
                   value={formData.type}
                   onChange={handleFormChange}
-                  className="w-full rounded-xl border border-white/10 bg-[#080e1b] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500"
+                  className={inputClass}
                 >
                   <option value="stock_in">Stock In — Add units</option>
                   <option value="stock_out">Stock Out — Remove units</option>
@@ -623,7 +643,7 @@ function InventoryPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
+                <label className={labelClass}>
                   {formData.type === 'adjustment'
                     ? 'New Stock Quantity'
                     : 'Quantity'}
@@ -642,18 +662,18 @@ function InventoryPage() {
                       ? 'Enter final stock quantity'
                       : 'Enter quantity'
                   }
-                  className="w-full rounded-xl border border-white/10 bg-[#080e1b] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500"
+                  className={inputClass}
                 />
 
                 {formData.type === 'adjustment' && (
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-[var(--text-muted)]">
                     This replaces the current quantity; it is not added to it.
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
+                <label className={labelClass}>
                   Reason {formData.type === 'adjustment' ? '*' : '(Optional)'}
                 </label>
 
@@ -665,16 +685,16 @@ function InventoryPage() {
                   maxLength={300}
                   required={formData.type === 'adjustment'}
                   placeholder="e.g. New supplier shipment or stock correction"
-                  className="w-full resize-none rounded-xl border border-white/10 bg-[#080e1b] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500"
+                  className={`${inputClass} resize-none`}
                 />
               </div>
 
-              <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-color)] pt-4 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={closeModal}
                   disabled={saving}
-                  className="rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 hover:bg-white/5 disabled:opacity-50"
+                  className="rounded-xl border border-[var(--border-color)] px-5 py-3 text-sm font-medium text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)] disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -682,7 +702,7 @@ function InventoryPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-hover)] disabled:opacity-50"
                 >
                   {saving && (
                     <LoaderCircle size={16} className="animate-spin" />

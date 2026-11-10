@@ -37,19 +37,19 @@ const currencyFormatter = new Intl.NumberFormat('en-IN', {
 
 function StatCard({ title, value, icon: Icon, description }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">{title}</p>
-        <div className="rounded-xl bg-indigo-500/10 p-3">
-          <Icon size={19} className="text-indigo-400" />
+    <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-[var(--text-muted)]">{title}</p>
+        <div className="rounded-xl bg-[var(--accent-soft)] p-3">
+          <Icon size={19} className="text-[var(--accent)]" />
         </div>
       </div>
 
-      <h2 className="mt-5 text-2xl font-bold text-white">
+      <h2 className="mt-5 break-words text-2xl font-bold text-[var(--text-primary)]">
         {value}
       </h2>
 
-      <p className="mt-2 text-xs text-slate-500">
+      <p className="mt-2 text-xs text-[var(--text-muted)]">
         {description}
       </p>
     </div>
@@ -115,8 +115,8 @@ function DashboardPage() {
     return (
       <div className="flex min-h-[350px] items-center justify-center">
         <div className="text-center">
-          <RefreshCw className="mx-auto animate-spin text-indigo-400" size={30} />
-          <p className="mt-4 text-sm text-slate-400">
+          <RefreshCw className="mx-auto animate-spin text-[var(--accent)]" size={30} />
+          <p className="mt-4 text-sm text-[var(--text-muted)]">
             Loading business analytics...
           </p>
         </div>
@@ -125,21 +125,24 @@ function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-indigo-400">BUSINESS OVERVIEW</p>
-          <h1 className="mt-2 text-2xl font-bold text-white">
+    <div className="min-w-0 space-y-8">
+
+      <div className="flex flex-col flex-wrap items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-[var(--accent)]">
+            BUSINESS OVERVIEW
+          </p>
+          <h1 className="mt-2 text-2xl font-bold text-[var(--text-primary)] sm:text-3xl">
             Dashboard
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
             Here's an overview of your business performance.
           </p>
         </div>
 
         <button
           onClick={loadAnalytics}
-          className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#0d1424] px-4 py-2.5 text-sm text-slate-300 hover:bg-white/5"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)] sm:w-auto"
         >
           <RefreshCw size={16} />
           Refresh
@@ -147,12 +150,12 @@ function DashboardPage() {
       </div>
 
       {error && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500 dark:text-red-300">
           {error}
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total Revenue"
           value={currencyFormatter.format(totalRevenue)}
@@ -182,13 +185,13 @@ function DashboardPage() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
+      <div className="grid min-w-0 gap-6 xl:grid-cols-2">
+        <div className="min-w-0 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-sm sm:p-5">
           <div className="mb-6">
-            <h2 className="font-semibold text-white">
+            <h2 className="font-semibold text-[var(--text-primary)]">
               Revenue Overview
             </h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-[var(--text-muted)]">
               Daily revenue for the last 30 days
             </p>
           </div>
@@ -198,33 +201,38 @@ function DashboardPage() {
               <AreaChart data={revenue}>
                 <defs>
                   <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#818cf8" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#168bd4" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#168bd4" stopOpacity={0} />
                   </linearGradient>
                 </defs>
 
-                <CartesianGrid strokeDasharray="3 3" stroke="#263247" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--border-color)"
+                />
 
                 <XAxis
                   dataKey="date"
-                  stroke="#64748b"
+                  stroke="var(--text-muted)"
                   tick={{ fontSize: 11 }}
                   tickFormatter={(value) => value.slice(5)}
                 />
 
                 <YAxis
-                  stroke="#64748b"
+                  stroke="var(--text-muted)"
                   tick={{ fontSize: 11 }}
                   tickFormatter={(value) => `₹${value}`}
+                  width={55}
                 />
 
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#111827',
-                    border: '1px solid #334155',
+                    backgroundColor: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '12px',
-                    color: '#fff'
+                    color: 'var(--text-primary)'
                   }}
+                  labelStyle={{ color: 'var(--text-primary)' }}
                   formatter={(value) => [
                     currencyFormatter.format(value),
                     'Revenue'
@@ -234,7 +242,7 @@ function DashboardPage() {
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#818cf8"
+                  stroke="#168bd4"
                   strokeWidth={2}
                   fill="url(#revenueGradient)"
                 />
@@ -243,11 +251,11 @@ function DashboardPage() {
           ) : (
             <div className="flex h-[280px] items-center justify-center text-center">
               <div>
-                <Activity size={30} className="mx-auto text-slate-600" />
-                <p className="mt-3 text-sm text-slate-400">
+                <Activity size={30} className="mx-auto text-[var(--text-muted)]" />
+                <p className="mt-3 text-sm text-[var(--text-secondary)]">
                   No revenue data available yet.
                 </p>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-[var(--text-muted)]">
                   Revenue will appear when paid orders are recorded.
                 </p>
               </div>
@@ -255,12 +263,12 @@ function DashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
+        <div className="min-w-0 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-sm sm:p-5">
           <div className="mb-6">
-            <h2 className="font-semibold text-white">
+            <h2 className="font-semibold text-[var(--text-primary)]">
               Order Statistics
             </h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-[var(--text-muted)]">
               Orders grouped by their current status
             </p>
           </div>
@@ -268,32 +276,37 @@ function DashboardPage() {
           {orders.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={orders}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#263247" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--border-color)"
+                />
 
                 <XAxis
                   dataKey="status"
-                  stroke="#64748b"
+                  stroke="var(--text-muted)"
                   tick={{ fontSize: 11 }}
                 />
 
                 <YAxis
-                  stroke="#64748b"
+                  stroke="var(--text-muted)"
                   tick={{ fontSize: 11 }}
                   allowDecimals={false}
+                  width={35}
                 />
 
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#111827',
-                    border: '1px solid #334155',
+                    backgroundColor: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '12px',
-                    color: '#fff'
+                    color: 'var(--text-primary)'
                   }}
+                  labelStyle={{ color: 'var(--text-primary)' }}
                 />
 
                 <Bar
                   dataKey="count"
-                  fill="#818cf8"
+                  fill="#168bd4"
                   radius={[6, 6, 0, 0]}
                 />
               </BarChart>
@@ -301,11 +314,11 @@ function DashboardPage() {
           ) : (
             <div className="flex h-[280px] items-center justify-center text-center">
               <div>
-                <ShoppingBag size={30} className="mx-auto text-slate-600" />
-                <p className="mt-3 text-sm text-slate-400">
+                <ShoppingBag size={30} className="mx-auto text-[var(--text-muted)]" />
+                <p className="mt-3 text-sm text-[var(--text-secondary)]">
                   No order statistics available yet.
                 </p>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-[var(--text-muted)]">
                   Your order chart will appear when orders are created.
                 </p>
               </div>
@@ -315,46 +328,46 @@ function DashboardPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="rounded-xl bg-amber-500/10 p-3">
-              <AlertTriangle className="text-amber-400" size={20} />
+              <AlertTriangle className="text-amber-500" size={20} />
             </div>
 
-            <div>
-              <h2 className="font-semibold text-white">
+            <div className="min-w-0">
+              <h2 className="font-semibold text-[var(--text-primary)]">
                 Low Stock Alerts
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--text-muted)]">
                 Products at or below their stock threshold
               </p>
             </div>
           </div>
 
-          <p className="mt-5 text-3xl font-bold text-white">
+          <p className="mt-5 text-3xl font-bold text-[var(--text-primary)]">
             {lowStockProducts}
           </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-[var(--text-muted)]">
             Products requiring stock attention
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <h2 className="font-semibold text-white">
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm">
+          <h2 className="font-semibold text-[var(--text-primary)]">
             Order Status Summary
           </h2>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
             {Object.entries(overview?.orderStatuses || {}).map(
               ([status, count]) => (
                 <div
                   key={status}
-                  className="rounded-xl bg-white/5 p-3"
+                  className="rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] p-3"
                 >
-                  <p className="text-xs capitalize text-slate-400">
+                  <p className="break-words text-xs capitalize text-[var(--text-muted)]">
                     {status}
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-white">
+                  <p className="mt-1 text-xl font-semibold text-[var(--text-primary)]">
                     {count}
                   </p>
                 </div>

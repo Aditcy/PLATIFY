@@ -69,6 +69,12 @@ function CategoriesPage() {
     )
   }, [categories, search])
 
+  const totalProducts = categories.reduce(
+    (total, category) =>
+      total + (Number(category.productCount) || 0),
+    0
+  )
+
   const openCreateModal = () => {
     setEditingCategory(null)
     setFormData({ name: '', description: '' })
@@ -154,126 +160,150 @@ function CategoriesPage() {
     }
   }
 
+  const inputClass =
+    'w-full rounded-xl border border-[var(--border-color)] bg-[var(--app-bg)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]'
+
+  const primaryButtonClass =
+    'inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-[var(--app-bg)] disabled:cursor-not-allowed disabled:opacity-50'
+
   return (
-    <div className="space-y-7">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">
+    <div className="mx-auto w-full max-w-[1600px] space-y-6 sm:space-y-8">
+
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
             Inventory Management
           </p>
-          <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl">
             Categories
           </h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
             Organise your products into categories.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
+          className={`${primaryButtonClass} w-full shrink-0 sm:w-auto`}
         >
           <Plus size={18} />
           Add Category
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm transition-colors duration-200 sm:p-6">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-slate-400">Total Categories</p>
-              <p className="mt-2 text-3xl font-bold text-white">
+              <p className="text-sm font-medium text-[var(--text-secondary)]">
+                Total Categories
+              </p>
+              <p className="mt-3 text-3xl font-bold tracking-tight text-[var(--text-primary)]">
                 {categories.length}
               </p>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">
+                Categories in your catalogue
+              </p>
             </div>
-            <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
+
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">
               <FolderOpen size={23} />
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5">
-          <div className="flex items-center justify-between">
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm transition-colors duration-200 sm:p-6">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-slate-400">Products Categorised</p>
-              <p className="mt-2 text-3xl font-bold text-white">
-                {categories.reduce(
-                  (total, category) =>
-                    total + (Number(category.productCount) || 0),
-                  0
-                )}
+              <p className="text-sm font-medium text-[var(--text-secondary)]">
+                Products Categorised
+              </p>
+              <p className="mt-3 text-3xl font-bold tracking-tight text-[var(--text-primary)]">
+                {totalProducts}
+              </p>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">
+                Products assigned to categories
               </p>
             </div>
-            <div className="rounded-xl bg-emerald-500/10 p-3 text-emerald-400">
+
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500">
               <Package size={23} />
             </div>
           </div>
-          <p className="mt-2 text-xs text-slate-500">
-            Based on product counts returned by the API.
-          </p>
         </div>
+
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#0d1424] p-5 sm:p-6">
-        <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-sm transition-colors duration-200">
+
+        <div className="flex flex-col justify-between gap-4 p-5 sm:p-6 lg:flex-row lg:items-center">
           <div>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-bold text-[var(--text-primary)]">
               Category Catalogue
             </h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-[var(--text-secondary)]">
               {filteredCategories.length} categories found
             </p>
           </div>
 
-          <div className="relative w-full sm:max-w-xs">
+          <div className="relative w-full lg:max-w-sm">
             <Search
-              size={17}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+              size={18}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
             />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search categories..."
-              className="w-full rounded-xl border border-white/10 bg-[#080e1b] py-2.5 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500"
+              aria-label="Search categories"
+              className={`${inputClass} pl-11`}
             />
           </div>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-slate-400">
-            <LoaderCircle size={18} className="animate-spin" />
+          <div className="flex items-center justify-center gap-3 py-16 text-sm text-[var(--text-secondary)]">
+            <LoaderCircle size={19} className="animate-spin text-[var(--accent)]" />
             Loading categories...
           </div>
         ) : filteredCategories.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-white/10 py-14 text-center">
-            <FolderOpen size={35} className="mx-auto text-slate-600" />
-            <p className="mt-4 font-medium text-white">
+          <div className="mx-5 mb-5 rounded-xl border border-dashed border-[var(--border-color)] px-4 py-14 text-center sm:mx-6 sm:mb-6">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
+              <FolderOpen size={27} />
+            </div>
+
+            <p className="mt-4 font-semibold text-[var(--text-primary)]">
               {search ? 'No matching categories' : 'No categories yet'}
             </p>
-            <p className="mt-2 text-sm text-slate-400">
+
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--text-secondary)]">
               {search
                 ? 'Try another search term.'
                 : 'Create your first category to organise your products.'}
             </p>
+
             {!search && (
               <button
                 onClick={openCreateModal}
-                className="mt-5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+                className={`${primaryButtonClass} mt-5`}
               >
+                <Plus size={17} />
                 Create Category
               </button>
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[600px] text-left">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[620px] text-left">
               <thead>
-                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-500">
-                  <th className="px-4 py-4 font-medium">Category</th>
-                  <th className="px-4 py-4 font-medium">Description</th>
-                  <th className="px-4 py-4 font-medium">Products</th>
-                  <th className="px-4 py-4 text-right font-medium">Actions</th>
+                <tr className="border-y border-[var(--border-color)] bg-[var(--app-bg)] text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                  <th className="px-5 py-4 font-semibold sm:px-6">Category</th>
+                  <th className="px-5 py-4 font-semibold">Description</th>
+                  <th className="px-5 py-4 font-semibold">Products</th>
+                  <th className="px-5 py-4 text-right font-semibold sm:px-6">
+                    Actions
+                  </th>
                 </tr>
               </thead>
 
@@ -281,35 +311,36 @@ function CategoriesPage() {
                 {filteredCategories.map((category) => (
                   <tr
                     key={category._id}
-                    className="border-b border-white/5 transition hover:bg-white/[0.02]"
+                    className="border-b border-[var(--border-color)] transition-colors last:border-b-0 hover:bg-[var(--card-bg-hover)]"
                   >
-                    <td className="px-4 py-4">
+                    <td className="px-5 py-4 sm:px-6">
                       <div className="flex items-center gap-3">
-                        <div className="rounded-lg bg-indigo-500/10 p-2 text-indigo-400">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
                           <FolderOpen size={18} />
                         </div>
-                        <span className="font-medium text-white">
+                        <span className="font-semibold text-[var(--text-primary)]">
                           {category.name}
                         </span>
                       </div>
                     </td>
 
-                    <td className="max-w-xs px-4 py-4 text-sm text-slate-400">
+                    <td className="max-w-xs px-5 py-4 text-sm text-[var(--text-secondary)]">
                       <span className="line-clamp-2">
                         {category.description || 'No description'}
                       </span>
                     </td>
 
-                    <td className="px-4 py-4 text-sm text-slate-300">
+                    <td className="px-5 py-4 text-sm font-medium tabular-nums text-[var(--text-primary)]">
                       {Number(category.productCount) || 0}
                     </td>
 
-                    <td className="px-4 py-4">
+                    <td className="px-5 py-4 sm:px-6">
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => openEditModal(category)}
                           title="Edit category"
-                          className="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-indigo-500/40 hover:bg-indigo-500/10 hover:text-indigo-400"
+                          aria-label={`Edit ${category.name}`}
+                          className="rounded-lg border border-[var(--border-color)] p-2.5 text-[var(--text-secondary)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)]"
                         >
                           <Pencil size={16} />
                         </button>
@@ -317,7 +348,8 @@ function CategoriesPage() {
                         <button
                           onClick={() => handleDelete(category)}
                           title="Delete category"
-                          className="rounded-lg border border-white/10 p-2 text-slate-400 transition hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-400"
+                          aria-label={`Delete ${category.name}`}
+                          className="rounded-lg border border-[var(--border-color)] p-2.5 text-[var(--text-secondary)] transition hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -329,17 +361,31 @@ function CategoriesPage() {
             </table>
           </div>
         )}
+
+        {!loading && filteredCategories.length > 0 && (
+          <div className="border-t border-[var(--border-color)] px-5 py-3 sm:px-6">
+            <p className="text-xs text-[var(--text-muted)]">
+              Showing {filteredCategories.length} of {categories.length} categories
+            </p>
+          </div>
+        )}
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0d1424] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-slate-950/60 p-3 backdrop-blur-sm sm:p-5"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeModal()
+          }}
+        >
+          <div className="my-auto max-h-[calc(100dvh-24px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-2xl sm:max-h-[calc(100dvh-40px)]">
+
+            <div className="sticky top-0 flex items-center justify-between gap-4 border-b border-[var(--border-color)] bg-[var(--card-bg)] px-5 py-5 sm:px-6">
               <div>
-                <h2 className="text-lg font-semibold text-white">
+                <h2 className="text-lg font-bold text-[var(--text-primary)]">
                   {editingCategory ? 'Edit Category' : 'Add Category'}
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
                   Enter the category details below.
                 </p>
               </div>
@@ -347,49 +393,69 @@ function CategoriesPage() {
               <button
                 onClick={closeModal}
                 disabled={saving}
-                className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white"
+                aria-label="Close dialog"
+                className="shrink-0 rounded-lg p-2 text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
               >
-                <X size={19} />
+                <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5 p-6">
+            <form onSubmit={handleSubmit} className="space-y-5 p-5 sm:p-6">
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
+                <label
+                  htmlFor="category-name"
+                  className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
+                >
                   Category Name *
                 </label>
+
                 <input
+                  id="category-name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="e.g. T-Shirts"
                   maxLength={100}
                   required
-                  className="w-full rounded-xl border border-white/10 bg-[#080e1b] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500"
+                  autoFocus
+                  className={inputClass}
                 />
+
+                <p className="mt-1.5 text-xs text-[var(--text-muted)]">
+                  Maximum 100 characters.
+                </p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">
+                <label
+                  htmlFor="category-description"
+                  className="mb-2 block text-sm font-semibold text-[var(--text-primary)]"
+                >
                   Description
                 </label>
+
                 <textarea
+                  id="category-description"
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Describe this category..."
                   rows={4}
                   maxLength={500}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-[#080e1b] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-indigo-500"
+                  className={`${inputClass} resize-y`}
                 />
+
+                <p className="mt-1.5 text-xs text-[var(--text-muted)]">
+                  Maximum 500 characters.
+                </p>
               </div>
 
-              <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-color)] pt-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={closeModal}
                   disabled={saving}
-                  className="rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 hover:bg-white/5 disabled:opacity-50"
+                  className="rounded-xl border border-[var(--border-color)] px-5 py-3 text-sm font-semibold text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -397,9 +463,11 @@ function CategoriesPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+                  className={primaryButtonClass}
                 >
-                  {saving && <LoaderCircle size={16} className="animate-spin" />}
+                  {saving && (
+                    <LoaderCircle size={17} className="animate-spin" />
+                  )}
                   {saving
                     ? 'Saving...'
                     : editingCategory
@@ -411,6 +479,7 @@ function CategoriesPage() {
           </div>
         </div>
       )}
+
     </div>
   )
 }
