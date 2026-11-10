@@ -4,7 +4,8 @@ const express = require('express')
 const {
   getOverview,
   getRevenue,
-  getOrderStatistics
+  getOrderStatistics,
+  getTopProducts
 } = require('./analytics.controller')
 
 const { protect } = require('../../middleware/auth.middleware')
@@ -20,5 +21,6 @@ router.use(protect, verifyTenantAccess)
 router.get('/overview', getOverview)
 router.get('/revenue', getRevenue)
 router.get('/orders', getOrderStatistics)
+router.get('/top-products', getTopProducts)
 
 module.exports = router

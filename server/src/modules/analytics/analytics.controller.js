@@ -202,8 +202,59 @@ const getOrderStatistics = async (req, res) => {
   }
 }
 
+const getTopProducts = async (req, res) => {
+  try {
+    const products = await Order.aggregate([
+      {
+        $match: {
+          tenantId: req.tenant._id,
+          paymentStatus: 'paid',
+          orderStatus: { $ne: 'cancelled' }
+        }
+      },
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: {
+            productId: '$items.productId',
+            productName: '$items.productName',
+            sku: '$items.sku'
+          },
+          unitsSold: { $sum: '$items.quantity' },
+          revenue: { $sum: '$items.subtotal' }
+        }
+      },
+      { $sort: { unitsSold: -1, revenue: -1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          _id: 0,
+          productId: '$_id.productId',
+          productName: '$_id.productName',
+          sku: '$_id.sku',
+          unitsSold: 1,
+          revenue: 1
+        }
+      }
+    ])
+
+    return res.status(200).json({
+      success: true,
+      data: products
+    })
+  } catch (error) {
+    console.error('Top products analytics error:', error.message)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to retrieve top-selling products'
+    })
+  }
+}
+
 module.exports = {
   getOverview,
   getRevenue,
-  getOrderStatistics
+  getOrderStatistics,
+  getTopProducts
 }

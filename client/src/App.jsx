@@ -12,6 +12,7 @@ import CategoriesPage from './pages/dashboard/CategoriesPage'
 import InventoryPage from './pages/dashboard/InventoryPage'
 import OrdersPage from './pages/dashboard/OrdersPage'
 import CustomersPage from './pages/dashboard/CustomersPage'
+import ReportsPage from './pages/dashboard/ReportsPage'
 
 function PlaceholderPage({ title }) {
   return (
@@ -71,7 +72,7 @@ function App() {
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="customers" element={<CustomersPage />} />
-          <Route path="analytics" element={<PlaceholderPage title="Analytics" />} />
+          <Route path="analytics" element={<ReportsPage />} />
           <Route path="settings" element={<PlaceholderPage title="Settings" />} />
         </Route>
       </Route>

@@ -76,6 +76,7 @@ function OrdersPage() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [updatingPayment, setUpdatingPayment] = useState(false)
 
   const [showForm, setShowForm] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -324,6 +325,43 @@ function OrdersPage() {
       toast.error(
         error.response?.data?.message || 'Unable to update order status'
       )
+    }
+  }
+
+  const handlePaymentUpdate = async (order) => {
+    if (order.paymentStatus !== 'pending') return
+
+    if (order.orderStatus === 'cancelled') {
+      toast.error('Cannot update payment for a cancelled order')
+      return
+    }
+
+    if (!window.confirm(
+      `Confirm that payment has been received for ${order.orderNumber}?`
+    )) {
+      return
+    }
+
+    try {
+      setUpdatingPayment(true)
+
+      const updatedOrder = await updateOrderStatus(
+        tenantId,
+        order._id,
+        { paymentStatus: 'paid' }
+      )
+
+      setSelectedOrder(updatedOrder)
+
+      toast.success('Payment marked as paid successfully')
+
+      await loadData()
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || 'Unable to update payment status'
+      )
+    } finally {
+      setUpdatingPayment(false)
     }
   }
 
@@ -957,6 +995,15 @@ function OrdersPage() {
                 <p className="mt-1 text-sm capitalize text-slate-400">
                   {selectedOrder.paymentStatus}
                 </p>
+                {selectedOrder.paymentStatus === 'pending' && selectedOrder.orderStatus !== 'cancelled' && (
+        <button onClick={() => handlePaymentUpdate(selectedOrder)}
+          disabled={updatingPayment}
+          className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <CheckCircle size={15} />
+          {updatingPayment ? 'Updating...' : 'Mark as Paid'}
+        </button>
+      )}
               </div>
             </div>
 

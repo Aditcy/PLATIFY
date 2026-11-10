@@ -27,7 +27,7 @@ const navigation = [
   { name: 'Inventory', path: '/dashboard/inventory', icon: Boxes },
   { name: 'Orders', path: '/dashboard/orders', icon: ShoppingCart },
   { name: 'Customers', path: '/dashboard/customers', icon: Users },
-  { name: 'Analytics', path: '/dashboard/analytics', icon: ChartNoAxesCombined }
+  { name: 'Reports & Insights', path: '/dashboard/analytics', icon: ChartNoAxesCombined }
 ]
 
 function DashboardLayout() {
