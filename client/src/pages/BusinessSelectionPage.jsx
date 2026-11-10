@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
-import { Building2, Plus, ArrowRight, LogOut } from 'lucide-react'
+import { Building2, Plus, ArrowRight, LogOut, Sun, Moon } from 'lucide-react'
+
+import { useTheme } from '../context/ThemeContext'
 
 import {
   getMyBusinesses,
@@ -18,6 +20,7 @@ import {
 function BusinessSelectionPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { theme, toggleTheme } = useTheme()
 
   const { user, businesses } = useSelector((state) => state.auth)
 
@@ -73,6 +76,7 @@ function BusinessSelectionPage() {
           ([key, value]) => key === 'name' || value.trim() !== ''
         )
       )
+
       await createBusiness(businessData)
 
       const response = await getMyBusinesses()
@@ -90,7 +94,6 @@ function BusinessSelectionPage() {
       })
 
       setShowForm(false)
-
     } catch (error) {
       toast.error(
         error.response?.data?.message || 'Unable to create business'
@@ -111,60 +114,73 @@ function BusinessSelectionPage() {
     toast.success('Logged out successfully')
   }
 
+  const inputClass = 'w-full min-w-0 rounded-lg border p-3 outline-none transition focus:border-[var(--accent)]'
+  const surfaceClass = 'rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]'
+  const mutedTextClass = 'text-[var(--text-muted)]'
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--app-bg)] p-5 text-[var(--text-primary)]">
         Loading your businesses...
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 md:p-10">
-
-      <div className="max-w-6xl mx-auto">
-
-        <header className="flex justify-between items-center mb-12">
+    <div className="min-h-screen bg-[var(--app-bg)] px-4 py-6 text-[var(--text-primary)] sm:px-6 md:px-10 md:py-10">
+      <div className="mx-auto w-full max-w-6xl">
+        <header className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
               PLATIFY
             </h1>
-            <p className="text-slate-400 mt-1">
+            <p className={`mt-1 ${mutedTextClass}`}>
               Business Workspace
             </p>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition"
-          >
-            <LogOut size={18} />
-            Logout
-          </button>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-secondary)] transition hover:bg-[var(--card-bg-hover)]"
+            >
+              {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className={`flex items-center gap-2 transition hover:text-[var(--text-primary)] ${mutedTextClass}`}
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+          </div>
         </header>
 
         <section className="mb-10">
-          <p className="text-indigo-400 text-sm font-medium mb-2">
+          <p className="mb-2 text-sm font-medium text-[var(--accent)]">
             WELCOME TO PLATIFY
           </p>
 
-          <h2 className="text-3xl md:text-4xl font-bold">
+          <h2 className="text-3xl font-bold sm:text-4xl">
             Welcome{user?.name ? `, ${user.name}` : ' back'}!
           </h2>
 
-          <p className="text-slate-400 mt-3">
+          <p className={`mt-3 ${mutedTextClass}`}>
             Select a business workspace or create a new one.
           </p>
         </section>
 
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <h3 className="text-xl font-semibold">
             Your Businesses
           </h3>
 
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-indigo-600 hover:bg-indigo-500 px-5 py-3 rounded-lg flex items-center gap-2 font-medium transition"
+            className="flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-3 font-medium text-white transition hover:bg-[var(--accent-hover)]"
           >
             <Plus size={18} />
             Create Business
@@ -174,21 +190,20 @@ function BusinessSelectionPage() {
         {showForm && (
           <form
             onSubmit={handleCreateBusiness}
-            className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8"
+            className={`${surfaceClass} mb-8 p-5 sm:p-6`}
           >
-            <h3 className="text-xl font-semibold mb-5">
+            <h3 className="mb-5 text-xl font-semibold">
               Create a Business Workspace
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <input
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Business name *"
                 required
-                className="bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none focus:border-indigo-500"
+                className={`${inputClass} bg-[var(--app-bg)]`}
               />
 
               <input
@@ -196,7 +211,7 @@ function BusinessSelectionPage() {
                 value={formData.businessType}
                 onChange={handleChange}
                 placeholder="Business type (e.g. Fashion & Lifestyle)"
-                className="bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none focus:border-indigo-500"
+                className={`${inputClass} bg-[var(--app-bg)]`}
               />
 
               <input
@@ -205,7 +220,7 @@ function BusinessSelectionPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Business email"
-                className="bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none focus:border-indigo-500"
+                className={`${inputClass} bg-[var(--app-bg)]`}
               />
 
               <input
@@ -213,7 +228,7 @@ function BusinessSelectionPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Business phone"
-                className="bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none focus:border-indigo-500"
+                className={`${inputClass} bg-[var(--app-bg)]`}
               />
 
               <input
@@ -221,16 +236,15 @@ function BusinessSelectionPage() {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Business address"
-                className="md:col-span-2 bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none focus:border-indigo-500"
+                className={`${inputClass} bg-[var(--app-bg)] md:col-span-2`}
               />
-
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="mt-6 flex flex-wrap gap-3">
               <button
                 type="submit"
                 disabled={creating}
-                className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 px-5 py-3 rounded-lg font-medium"
+                className="rounded-lg bg-[var(--accent)] px-5 py-3 font-medium text-white transition hover:bg-[var(--accent-hover)] disabled:opacity-50"
               >
                 {creating ? 'Creating...' : 'Create Workspace'}
               </button>
@@ -238,7 +252,7 @@ function BusinessSelectionPage() {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="bg-slate-800 hover:bg-slate-700 px-5 py-3 rounded-lg"
+                className="rounded-lg border border-[var(--border-color)] bg-[var(--card-bg-hover)] px-5 py-3 transition hover:opacity-80"
               >
                 Cancel
               </button>
@@ -247,69 +261,66 @@ function BusinessSelectionPage() {
         )}
 
         {businesses.length === 0 ? (
-          <div className="bg-slate-900 border border-dashed border-slate-700 rounded-2xl p-12 text-center">
+          <div className={`${surfaceClass} border-dashed p-8 text-center sm:p-12`}>
             <Building2
               size={42}
-              className="mx-auto text-slate-500 mb-4"
+              className="mx-auto mb-4 text-[var(--text-muted)]"
             />
 
             <h3 className="text-xl font-semibold">
               No businesses yet
             </h3>
 
-            <p className="text-slate-400 mt-2 mb-6">
+            <p className={`mb-6 mt-2 ${mutedTextClass}`}>
               Create your first business workspace to get started.
             </p>
 
             <button
               onClick={() => setShowForm(true)}
-              className="bg-indigo-600 hover:bg-indigo-500 px-5 py-3 rounded-lg"
+              className="rounded-lg bg-[var(--accent)] px-5 py-3 text-white transition hover:bg-[var(--accent-hover)]"
             >
               Create Your First Business
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {businesses.map((business) => (
               <div
                 key={business.id}
-                className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-indigo-500 transition"
+                className={`${surfaceClass} p-5 transition hover:border-[var(--accent)] sm:p-6`}
               >
-                <div className="flex items-center justify-between mb-5">
-                  <div className="bg-indigo-500/10 p-3 rounded-xl">
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="rounded-xl bg-[var(--accent-soft)] p-3">
                     <Building2
                       size={25}
-                      className="text-indigo-400"
+                      className="text-[var(--accent)]"
                     />
                   </div>
 
-                  <span className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full capitalize">
+                  <span className="rounded-full border border-[var(--border-color)] bg-[var(--card-bg-hover)] px-3 py-1 text-xs capitalize text-[var(--text-secondary)]">
                     {business.role}
                   </span>
                 </div>
 
-                <h3 className="text-xl font-semibold">
+                <h3 className="break-words text-xl font-semibold">
                   {business.name}
                 </h3>
 
-                <p className="text-slate-400 text-sm mt-2">
+                <p className={`mt-2 text-sm ${mutedTextClass}`}>
                   {business.businessType || 'Retail Business'}
                 </p>
 
                 <button
                   onClick={() => handleSelectBusiness(business)}
-                  className="w-full mt-6 bg-slate-800 hover:bg-indigo-600 py-3 rounded-lg flex items-center justify-center gap-2 transition"
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--card-bg-hover)] py-3 transition hover:bg-[var(--accent)] hover:text-white"
                 >
                   Open Workspace
                   <ArrowRight size={17} />
                 </button>
               </div>
             ))}
-
           </div>
         )}
-
       </div>
     </div>
   )
