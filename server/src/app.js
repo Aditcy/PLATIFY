@@ -12,11 +12,13 @@ const categoryRoutes = require('./modules/categories/category.routes')
 const inventoryRoutes = require('./modules/inventory/inventory.routes')
 const orderRoutes = require('./modules/orders/order.routes')
 const customerRoutes = require('./modules/customers/customer.routes')
+const ensureDatabaseConnection = require('./config/serverlessDB')
 app.use(cors({
   origin: 'http://localhost:5173'
 }))
 
 app.use(express.json())
+app.use(ensureDatabaseConnection)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/tenants', tenantRoutes)

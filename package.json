@@ -1,3 +1,4 @@
+
 {
   "name": "platify",
   "version": "1.0.0",
@@ -10,7 +11,16 @@
     "build": "npm run build --prefix client",
     "start": "npm start --prefix server"
   },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.12.1",
+    "zod": "^4.6.7"
+  },
   "devDependencies": {
-    "concurrently": "^10.0.6"
+    "concurrently": "^10.0.7"
   }
 }
